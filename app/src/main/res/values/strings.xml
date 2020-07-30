@@ -1,0 +1,27 @@
+<resources>
+    //Nombre APP
+    <string name="app_name">List</string>
+
+    //imagen descripcion
+    <string name="logoApp">logoApp</string>
+
+    //Textos
+    <string name="txt_app">List</string>
+    <string name="txt_pido_nombre_lista">Ingrese nombre de la Lista</string>
+    <string name="chackBox_completado">Completado</string>
+    <string name="txt_producto">Producto</string>
+    <string name="txt_AgregarProductoNombre">Ingrese Nombre</string>
+    <string name="nombreLista">Nombre Lista</string>
+
+    //Botones
+    <string name="btn_crearList">Nueva Lista</string>
+    <string name="btn_buscarList">Buscar Lista</string>
+    <string name="btn_AgregarALista">Agregar</string>
+    <string name="btn_GuardarLista">Guardar Lista</string>
+    <string name="btn_EliminarLista">Eliminar Lista</string>
+
+
+    //version APP
+    <string name="txt_versionApp">Version de la aplicacion</string>
+    <string name="version_app">2.11</string>
+</resources>

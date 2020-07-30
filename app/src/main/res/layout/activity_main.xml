@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/LogoApp"
+            android:layout_width="306dp"
+            android:layout_height="262dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/logoApp"
+            app:srcCompat="@drawable/logoapplist" />
+
+        <TextView
+            android:id="@+id/NameApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LogoApp"
+            android:gravity="center"
+            android:text="@string/txt_app"
+            android:textColor="#000000"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/btn_crear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/NameApp"
+            android:layout_marginTop="20dp"
+            android:onClick="CrearLista"
+            android:text="@string/btn_crearList" />
+
+        <Button
+            android:id="@+id/btn_buscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_crear"
+            android:layout_marginTop="5dp"
+            android:onClick="BuscarLista"
+            android:text="@string/btn_buscarList" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
