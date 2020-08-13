@@ -18,11 +18,13 @@ class ConexionSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
             db.execSQL("create table lista(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre text, objetosLista text, cantidadObjetos int)");
+            db.execSQL("create table objetos(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre text, FOREIGN KEY(nombre) REFERENCES lista(objetosLista) )");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS lista");
+            db.execSQL("DROP TABLE IF EXISTS objetos");
             onCreate(db);
     }
 }

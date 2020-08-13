@@ -20,8 +20,12 @@ import android.widget.Toast;
 import com.example.listappmobile.entidades.Lista;
 import com.example.listappmobile.utilidades.Utilidades;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,34 +86,29 @@ public class ActivityCreaLista extends AppCompatActivity {
         });
     }
 
-    public void guardarLista (View v){
+    public void guardarLista (View v) throws JSONException {
 
         if(!nombreLista.getText().toString().isEmpty()) {
 
 
             String nombreListas = nombreLista.getText().toString();
 
-            ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 2);
+            ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 3);
             SQLiteDatabase db = conn.getWritableDatabase();
 
             String nombreListaJson = new Gson().toJson(nombreListas);
-            String listadoObjetosJson = new Gson().toJson(productos);//.replace("\"","").replace("]","").replace("[","");
-
-            //    Cursor fila = db.rawQuery("SELECT nombre FROM lista WHERE nombre ='"+nombreListas+"'",null);
-            //   String nombreExistente;
-            //  Validar que no ingrese 2 listas con el mismo nombre?
-            //
-            //
-            //
+            String listadoObjetosJson = new Gson().toJson(productos);
 
 
             if (!nombreListas.equalsIgnoreCase("nombreExistente")){
-            ContentValues values = new ContentValues();
-            values.put("nombre",nombreListas);
-            values.put("objetosLista",listadoObjetosJson);
-            values.put("cantidadObjetos",productos.size());
+                ContentValues values = new ContentValues();
+                values.put("nombre",nombreListas);
+                for(int i=0; i<productos.size(); i++) {
+                    values.put("objetosLista", productos.get(i));
+                }
+                 values.put("cantidadObjetos",productos.size());
 
-            Long guardado = db.insert("lista",null,values);
+                Long guardado = db.insert("lista",null,values);
 
 
 
@@ -130,7 +129,7 @@ public class ActivityCreaLista extends AppCompatActivity {
                 Intent i = new Intent(this, BuscarListas.class);
                 startActivity(i);
 
-            } else {
+                } else {
                 Toast.makeText(this,"No se puede guardar la lista, ya existe el nombre", Toast.LENGTH_LONG).show();
             }
 

@@ -24,6 +24,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ActivityLista extends AppCompatActivity {
 
@@ -50,34 +51,22 @@ public class ActivityLista extends AppCompatActivity {
         ArrayAdapter<String> adapterLista= new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosLista); //Antes iba objetosLista
         lista_Objetos_Lista.setAdapter(adapterLista);
 
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 2);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 3);
         SQLiteDatabase db = conn.getWritableDatabase();
 
         nombre_lista.setText(nombreListaSeleccionada);
 
-        Cursor fila = db.rawQuery("select objetosLista from lista where nombre = '"+nombreListaSeleccionada+"'", null);
+        Cursor fila = db.rawQuery("SELECT objetosLista FROM lista WHERE nombre= '"+nombreListaSeleccionada+"'", null);
 
-        String NombreLista;
 
         if (fila != null && fila.moveToFirst()) {
             do{
-                NombreLista = fila.getString(fila.getColumnIndex("objetosLista"));
+               String  NombreLista = fila.getString(fila.getColumnIndex("objetosLista"));
+               objetosLista.add(NombreLista); //Devuelve el listado como ["x1","x2","x3"]
+
             }while (fila.moveToNext());
         }
 
-        ArrayList<String> list = new ArrayList<String>();
-        Object jsonObject = db.rawQuery("select objetosLista from lista where nombre = '"+nombreListaSeleccionada+"'", null);;
-//        JSONArray jsonArray = (JSONArray)jsonObject;
-//        if (jsonArray != null) {
-//            int len = jsonArray.length();
-//            for (int i=0;i<len;i++){
-//                try {
-//                    objetosLista.add(jsonArray.get(i).toString());
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
 
 
         // Toast.makeText(getApplicationContext(), "Listado: "+strings, Toast.LENGTH_LONG).show();
@@ -87,7 +76,7 @@ public class ActivityLista extends AppCompatActivity {
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 2);
+                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 3);
                 SQLiteDatabase db = conn.getWritableDatabase();
                 String nombreListaEliminar = nombre_lista.getText().toString();
 

@@ -46,7 +46,7 @@ public class BuscarListas extends AppCompatActivity {
         listadoDeListasCreadas = findViewById(R.id.listadoDeListasCreadas);
         botonBuscar = findViewById(R.id.BotonBuscar);
 
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 2);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 3);
         SQLiteDatabase db = conn.getWritableDatabase();
 
         Cursor consultaNombre = db.rawQuery("select nombre from lista", null);
@@ -66,7 +66,7 @@ public class BuscarListas extends AppCompatActivity {
         botonBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 2);
+                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 3);
                 SQLiteDatabase db2 = conn.getWritableDatabase();
 
                 String busquedadelista = tvBuscador.getText().toString();
