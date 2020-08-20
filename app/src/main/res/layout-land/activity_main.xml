@@ -35,7 +35,7 @@
             android:id="@+id/btn_crear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_crearList"
+            android:text="@string/btn_NuevaList"
             android:onClick="CrearLista"/>
 
         <Button

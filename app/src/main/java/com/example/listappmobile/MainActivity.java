@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     //Funcion para ir a la pantalla de CREAR LISTA
     public void CrearLista (View v){
 
-        Intent i = new Intent(this,ActivityCreaLista.class);
+        Intent i = new Intent(this,CreaNombreLista.class);
         startActivity(i);
 
     }

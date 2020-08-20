@@ -14,9 +14,10 @@
     <string name="nombreLista">Nombre Lista</string>
 
     //Botones
-    <string name="btn_crearList">Nueva Lista</string>
+    <string name="btn_NuevaList">Nueva Lista</string>
     <string name="btn_buscarList">Buscar Lista</string>
     <string name="btn_AgregarALista">Agregar</string>
+    <string name="btn_CrearLista">Crear Lista</string>
     <string name="btn_GuardarLista">Guardar Lista</string>
     <string name="btn_EliminarLista">Eliminar Lista</string>
 

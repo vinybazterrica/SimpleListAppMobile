@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreaNombreLista">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/LogoApp"
+            android:layout_width="284dp"
+            android:layout_height="249dp"
+            android:layout_centerInParent="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            app:srcCompat="@drawable/logoapplist" />
+
+        <EditText
+            android:id="@+id/ED_Pido_Nombre_Lista"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LogoApp"
+            android:layout_alignStart="@id/LogoApp"
+            android:layout_alignEnd="@id/LogoApp"
+            android:layout_marginTop="25dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/txt_pido_nombre_lista"/>
+
+        <Button
+            android:id="@+id/btn_crearLista"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ED_Pido_Nombre_Lista"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="15dp"
+            android:text="@string/btn_CrearLista" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

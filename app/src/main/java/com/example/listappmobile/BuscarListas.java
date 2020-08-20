@@ -46,10 +46,10 @@ public class BuscarListas extends AppCompatActivity {
         listadoDeListasCreadas = findViewById(R.id.listadoDeListasCreadas);
         botonBuscar = findViewById(R.id.BotonBuscar);
 
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 3);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 4);
         SQLiteDatabase db = conn.getWritableDatabase();
 
-        Cursor consultaNombre = db.rawQuery("select nombre from lista", null);
+        Cursor consultaNombre = db.rawQuery("select nombre from nombreLista", null);
 
         if (consultaNombre.moveToFirst()){
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);
@@ -66,7 +66,7 @@ public class BuscarListas extends AppCompatActivity {
         botonBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 3);
+                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
                 SQLiteDatabase db2 = conn.getWritableDatabase();
 
                 String busquedadelista = tvBuscador.getText().toString();
@@ -75,7 +75,7 @@ public class BuscarListas extends AppCompatActivity {
                     nombreListas.clear();
                     nombreListasencontradas.clear();
 
-                    Cursor buscadordeNombre = db2.rawQuery("select nombre from lista where nombre like '%" +busquedadelista+"%'", null);
+                    Cursor buscadordeNombre = db2.rawQuery("select nombre from nombreLista where nombre like '%" +busquedadelista+"%'", null);
 
                     if (buscadordeNombre.moveToFirst()) {
                         ArrayAdapter<String> adapterBuscador = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListasencontradas);
@@ -91,12 +91,12 @@ public class BuscarListas extends AppCompatActivity {
 
                 } else {
 
-                    ConexionSQLiteHelper conn2 = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 2);
+                    ConexionSQLiteHelper conn2 = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
                     SQLiteDatabase db3 = conn2.getWritableDatabase();
 
                     nombreListas.clear();
                     nombreListasencontradas.clear();
-                    Cursor consultaNombre = db3.rawQuery("select nombre from lista", null);
+                    Cursor consultaNombre = db3.rawQuery("select nombre from nombreLista", null);
 
                     if (consultaNombre.moveToFirst()){
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);

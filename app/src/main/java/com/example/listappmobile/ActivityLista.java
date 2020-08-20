@@ -51,7 +51,7 @@ public class ActivityLista extends AppCompatActivity {
         ArrayAdapter<String> adapterLista= new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosLista); //Antes iba objetosLista
         lista_Objetos_Lista.setAdapter(adapterLista);
 
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 3);
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
         SQLiteDatabase db = conn.getWritableDatabase();
 
         nombre_lista.setText(nombreListaSeleccionada);
@@ -62,7 +62,7 @@ public class ActivityLista extends AppCompatActivity {
         if (fila != null && fila.moveToFirst()) {
             do{
                String  NombreLista = fila.getString(fila.getColumnIndex("objetosLista"));
-               objetosLista.add(NombreLista); //Devuelve el listado como ["x1","x2","x3"]
+               objetosLista.add(NombreLista);
 
             }while (fila.moveToNext());
         }
@@ -76,7 +76,7 @@ public class ActivityLista extends AppCompatActivity {
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 3);
+                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
                 SQLiteDatabase db = conn.getWritableDatabase();
                 String nombreListaEliminar = nombre_lista.getText().toString();
 

@@ -36,7 +36,7 @@
             android:layout_below="@id/NameApp"
             android:layout_marginTop="20dp"
             android:onClick="CrearLista"
-            android:text="@string/btn_crearList" />
+            android:text="@string/btn_NuevaList" />
 
         <Button
             android:id="@+id/btn_buscar"

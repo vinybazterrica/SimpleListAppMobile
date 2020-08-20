@@ -45,7 +45,7 @@ public class ActivityCreaLista extends AppCompatActivity {
     List <String> productos = new ArrayList<>();
     ArrayAdapter<String> adapter;
 
-
+    long idLista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +55,30 @@ public class ActivityCreaLista extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true); //Agrego el icono al ActionBar
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);   //Seteo el icono que quiero en el ActionBar
 
+        //Id de la lista creada anteriormente
+        idLista = getIntent().getLongExtra("idLista", -1);
 
         nombreLista = findViewById(R.id.et_NombreLista);
         btn_Agregar = findViewById(R.id.btn_agregar);
         tx_nombreProducto = findViewById(R.id.tx_nombreProducto);
         listaView = findViewById(R.id.listaView);
 
-
         adapter = new ArrayAdapter<>(getApplicationContext(),R.layout.items_lista, productos);
         listaView.setAdapter(adapter);
+
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 4);
+        SQLiteDatabase db = conn.getWritableDatabase();
+
+        Cursor busca_Nombre_En_BD = db.rawQuery("select nombre from nombreLista where id ="+idLista,null);
+
+        if (busca_Nombre_En_BD != null) {
+            busca_Nombre_En_BD.moveToFirst();
+            do {
+                String nombre_Lista = busca_Nombre_En_BD.getString(0);
+                nombreLista.setText(nombre_Lista);
+            }while (busca_Nombre_En_BD.moveToNext());
+        }
+        busca_Nombre_En_BD.close();
 
 
 
@@ -86,39 +101,24 @@ public class ActivityCreaLista extends AppCompatActivity {
         });
     }
 
-    public void guardarLista (View v) throws JSONException {
+    public void guardarLista (View v) {
 
-        if(!nombreLista.getText().toString().isEmpty()) {
+        if(productos.size() != 0) {
 
-
-            String nombreListas = nombreLista.getText().toString();
-
-            ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 3);
+            ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 4);
             SQLiteDatabase db = conn.getWritableDatabase();
 
-            String nombreListaJson = new Gson().toJson(nombreListas);
-            String listadoObjetosJson = new Gson().toJson(productos);
+            ContentValues valores = new ContentValues();
 
+            for (int i = 0 ; i < productos.size(); i++){
+                valores.put("id_lista",idLista);
+                valores.put("objeto",productos.get(i));
+                long insert = db.insert("objetosLista", null, valores);
+            }
 
-            if (!nombreListas.equalsIgnoreCase("nombreExistente")){
-                ContentValues values = new ContentValues();
-                values.put("nombre",nombreListas);
-                for(int i=0; i<productos.size(); i++) {
-                    values.put("objetosLista", productos.get(i));
-                }
-                 values.put("cantidadObjetos",productos.size());
-
-                Long guardado = db.insert("lista",null,values);
-
-
-
-                Toast.makeText(this, "Lista guardada exitosamente, id: " + guardado.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Lista guardada exitosamente", Toast.LENGTH_LONG).show();
 
                 conn.close();
-
-                System.out.println(nombreListaJson);
-                System.out.println(listadoObjetosJson);
-                System.out.println(productos.size());
 
                 nombreLista.setText("");
                 nombreLista.setHint(R.string.txt_pido_nombre_lista);
@@ -129,12 +129,7 @@ public class ActivityCreaLista extends AppCompatActivity {
                 Intent i = new Intent(this, BuscarListas.class);
                 startActivity(i);
 
-                } else {
-                Toast.makeText(this,"No se puede guardar la lista, ya existe el nombre", Toast.LENGTH_LONG).show();
-            }
-
-
-        } else if (nombreLista.getText().toString().isEmpty()){
+        } else {
             Toast.makeText(this,"Debe ingresar nombre de Lista", Toast.LENGTH_SHORT).show();
         }
 
