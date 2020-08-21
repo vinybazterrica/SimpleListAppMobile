@@ -34,6 +34,7 @@ public class BuscarListas extends AppCompatActivity {
     List <String> nombreListas = new ArrayList<>();
 
     List <String> nombreListasencontradas = new ArrayList<>();
+    List <Integer> idsListas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +50,14 @@ public class BuscarListas extends AppCompatActivity {
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 4);
         SQLiteDatabase db = conn.getWritableDatabase();
 
-        Cursor consultaNombre = db.rawQuery("select nombre from nombreLista", null);
+        Cursor consultaNombre = db.rawQuery("select * from nombreLista", null);
 
         if (consultaNombre.moveToFirst()){
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);
             listadoDeListasCreadas.setAdapter(adapter);
             do{
-                nombreListas.add(consultaNombre.getString(0));
+                idsListas.add(consultaNombre.getInt(0));
+                nombreListas.add(consultaNombre.getString(1));
             }while (consultaNombre.moveToNext());
 
         }
@@ -75,14 +77,15 @@ public class BuscarListas extends AppCompatActivity {
                     nombreListas.clear();
                     nombreListasencontradas.clear();
 
-                    Cursor buscadordeNombre = db2.rawQuery("select nombre from nombreLista where nombre like '%" +busquedadelista+"%'", null);
+                    Cursor buscadordeNombre = db2.rawQuery("select * from nombreLista where nombre like '%" +busquedadelista+"%'", null);
 
                     if (buscadordeNombre.moveToFirst()) {
                         ArrayAdapter<String> adapterBuscador = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListasencontradas);
 
                         listadoDeListasCreadas.setAdapter(adapterBuscador);
                         do {
-                            nombreListasencontradas.add(buscadordeNombre.getString(0));
+                            idsListas.add(buscadordeNombre.getInt(0));
+                            nombreListasencontradas.add(buscadordeNombre.getString(1));
                         }while (buscadordeNombre.moveToNext());
                         adapterBuscador.notifyDataSetChanged();
                     }
@@ -96,13 +99,14 @@ public class BuscarListas extends AppCompatActivity {
 
                     nombreListas.clear();
                     nombreListasencontradas.clear();
-                    Cursor consultaNombre = db3.rawQuery("select nombre from nombreLista", null);
+                    Cursor consultaNombre = db3.rawQuery("select * from nombreLista", null);
 
                     if (consultaNombre.moveToFirst()){
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);
                         listadoDeListasCreadas.setAdapter(adapter);
                         do{
-                            nombreListas.add(consultaNombre.getString(0));
+                            idsListas.add(consultaNombre.getInt(0));
+                            nombreListas.add(consultaNombre.getString(1));
                         }while (consultaNombre.moveToNext());
                     }
 
@@ -117,11 +121,12 @@ public class BuscarListas extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                    long idLista = idsListas.get(position);
                     String nombrelistaSeleccionada = nombreListas.get(position);
                     Toast.makeText(getApplicationContext(),"La lista seleccionada es : "+nombrelistaSeleccionada, Toast.LENGTH_SHORT).show();
 
                     Intent i = new Intent(getApplicationContext(),ActivityLista.class);
-                    i.putExtra("ListaSeleccionada",nombrelistaSeleccionada);
+                    i.putExtra("idLista",idLista);
                     startActivity(i);
                 }
             });

@@ -42,7 +42,7 @@ public class ActivityLista extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true); //Agrego el icono al ActionBar
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);   //Seteo el icono que quiero en el ActionBar
 
-        String nombreListaSeleccionada = getIntent().getStringExtra("ListaSeleccionada");
+        final long idLista = getIntent().getLongExtra("idLista",-1);
 
         nombre_lista = findViewById(R.id.nombreLista);
         lista_Objetos_Lista = findViewById(R.id.listadoDeObjetos);
@@ -54,23 +54,29 @@ public class ActivityLista extends AppCompatActivity {
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
         SQLiteDatabase db = conn.getWritableDatabase();
 
-        nombre_lista.setText(nombreListaSeleccionada);
+        Cursor buscoNombre = db.rawQuery("SELECT nombre from nombreLista where id ="+idLista,null);
 
-        Cursor fila = db.rawQuery("SELECT objetosLista FROM lista WHERE nombre= '"+nombreListaSeleccionada+"'", null);
+        if (buscoNombre != null && buscoNombre.moveToFirst()) {
+            do{
+                String  NombreLista = buscoNombre.getString(0);
+                nombre_lista.setText(NombreLista);
+            }while (buscoNombre.moveToNext());
+        }
+
+        buscoNombre.close();
+
+        Cursor fila = db.rawQuery("SELECT objeto FROM objetosLista WHERE id_lista = "+idLista, null);
 
 
         if (fila != null && fila.moveToFirst()) {
             do{
-               String  NombreLista = fila.getString(fila.getColumnIndex("objetosLista"));
+               String  NombreLista = fila.getString(0);
                objetosLista.add(NombreLista);
-
             }while (fila.moveToNext());
         }
 
 
-
-        // Toast.makeText(getApplicationContext(), "Listado: "+strings, Toast.LENGTH_LONG).show();
-
+        fila.close();
 
         db.close();
         btnEliminar.setOnClickListener(new View.OnClickListener() {
@@ -78,13 +84,15 @@ public class ActivityLista extends AppCompatActivity {
             public void onClick(View v) {
                 ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
                 SQLiteDatabase db = conn.getWritableDatabase();
-                String nombreListaEliminar = nombre_lista.getText().toString();
+                int idLista_Eliminar = (int) idLista;
 
-                db.execSQL("DELETE from lista where nombre = '"+nombreListaEliminar+"'");
+                db.execSQL("DELETE from nombreLista where id ="+idLista_Eliminar);
+                db.execSQL("DELETE FROM objetosLista where id_lista ="+idLista_Eliminar);
 
                 Intent i = new Intent(getApplicationContext(), BuscarListas.class);
                 startActivity(i);
 
+                db.close();
             }
         });
 
