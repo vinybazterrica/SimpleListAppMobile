@@ -47,7 +47,9 @@
             android:layout_alignTop="@id/tx_nombreProducto"
             android:layout_alignBottom="@id/tx_nombreProducto"
             android:layout_toEndOf="@id/tx_nombreProducto"
-            android:text="@string/btn_AgregarALista" />
+            android:text="@string/btn_AgregarALista"
+            android:background="@drawable/boton_custom"
+            android:textColor="#FFF"/>
 
         <ListView
             android:id="@+id/listaView"
@@ -61,13 +63,15 @@
 
         <Button
             android:id="@+id/btn_guardar"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/listaView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20sp"
             android:onClick="guardarLista"
-            android:text="@string/btn_GuardarLista" />
+            android:text="@string/btn_GuardarLista"
+            android:background="@drawable/boton_custom"
+            android:textColor="#FFF"/>
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

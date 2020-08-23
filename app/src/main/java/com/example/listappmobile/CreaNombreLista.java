@@ -48,7 +48,10 @@ public class CreaNombreLista extends AppCompatActivity {
 
                     Intent i = new Intent(getApplicationContext(),ActivityCreaLista.class);
                     i.putExtra("idLista", IDguardado);
+                    finish();
                     startActivity(i);
+
+                    conn.close();
 
                 } else {
                     Toast.makeText(getApplicationContext(),"Debe ingresar nombre de Lista", Toast.LENGTH_SHORT).show();

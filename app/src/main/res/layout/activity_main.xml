@@ -31,21 +31,28 @@
 
         <Button
             android:id="@+id/btn_crear"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/NameApp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
+            android:background="@drawable/boton_custom"
             android:onClick="CrearLista"
-            android:text="@string/btn_NuevaList" />
+            android:text="@string/btn_NuevaList"
+            android:textColor="#FFFF"/>
 
         <Button
             android:id="@+id/btn_buscar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_crear"
-            android:layout_marginTop="5dp"
+            android:layout_alignStart="@id/btn_crear"
+            android:layout_alignEnd="@id/btn_crear"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/boton_custom"
             android:onClick="BuscarLista"
-            android:text="@string/btn_buscarList" />
+            android:text="@string/btn_buscarList"
+            android:textColor="#FFFF" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

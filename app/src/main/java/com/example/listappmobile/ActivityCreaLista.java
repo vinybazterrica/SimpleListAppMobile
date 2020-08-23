@@ -128,6 +128,7 @@ public class ActivityCreaLista extends AppCompatActivity {
 
                 Intent i = new Intent(this, BuscarListas.class);
                 startActivity(i);
+                finish();
 
         } else {
             Toast.makeText(this,"Debe ingresar nombre de Lista", Toast.LENGTH_SHORT).show();

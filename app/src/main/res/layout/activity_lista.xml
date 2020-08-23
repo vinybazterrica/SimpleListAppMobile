@@ -14,13 +14,15 @@
 
         <Button
             android:id="@+id/btnEliminar"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/listadoDeObjetos"
             android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
             android:textSize="15sp"
-            android:text="@string/btn_EliminarLista" />
+            android:text="@string/btn_EliminarLista"
+            android:background="@drawable/boton_custom"
+            android:textColor="#FFF"/>
 
         <TextView
             android:id="@+id/nombreLista"

@@ -91,8 +91,8 @@ public class ActivityLista extends AppCompatActivity {
 
                 Intent i = new Intent(getApplicationContext(), BuscarListas.class);
                 startActivity(i);
-
                 db.close();
+                finish();
             }
         });
 

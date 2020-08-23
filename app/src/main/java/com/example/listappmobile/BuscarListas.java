@@ -47,6 +47,7 @@ public class BuscarListas extends AppCompatActivity {
         listadoDeListasCreadas = findViewById(R.id.listadoDeListasCreadas);
         botonBuscar = findViewById(R.id.BotonBuscar);
 
+
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(this, "bd_listas", null, 4);
         SQLiteDatabase db = conn.getWritableDatabase();
 
@@ -62,6 +63,10 @@ public class BuscarListas extends AppCompatActivity {
 
         }
 
+        if (nombreListas.isEmpty()){
+            Toast.makeText(getApplicationContext(),"No tiene Listas Creadas", Toast.LENGTH_LONG).show();
+        }
+
         conn.close();
 
         //Buscador de listas, el cual busca en la base por like
@@ -73,47 +78,52 @@ public class BuscarListas extends AppCompatActivity {
 
                 String busquedadelista = tvBuscador.getText().toString();
 
-                if (!busquedadelista.isEmpty()) {
-                    nombreListas.clear();
-                    nombreListasencontradas.clear();
+                //Busqueda Implacable
+               if (!busquedadelista.isEmpty()) {
 
-                    Cursor buscadordeNombre = db2.rawQuery("select * from nombreLista where nombre like '%" +busquedadelista+"%'", null);
+                   idsListas.clear();
+                   nombreListas.clear();
+                   nombreListasencontradas.clear();
 
-                    if (buscadordeNombre.moveToFirst()) {
-                        ArrayAdapter<String> adapterBuscador = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListasencontradas);
+                   Cursor buscadordeNombre = db2.rawQuery("select * from nombreLista where nombre like '%" + busquedadelista + "%'", null);
 
-                        listadoDeListasCreadas.setAdapter(adapterBuscador);
-                        do {
-                            idsListas.add(buscadordeNombre.getInt(0));
-                            nombreListasencontradas.add(buscadordeNombre.getString(1));
-                        }while (buscadordeNombre.moveToNext());
-                        adapterBuscador.notifyDataSetChanged();
-                    }
+                   if (buscadordeNombre.moveToFirst()) {
+                       ArrayAdapter<String> adapterBuscador = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);
 
-                    buscadordeNombre.close();
+                       listadoDeListasCreadas.setAdapter(adapterBuscador);
+                       do {
+                           idsListas.add(buscadordeNombre.getInt(0));
+                           nombreListas.add(buscadordeNombre.getString(1));
+                       } while (buscadordeNombre.moveToNext());
+                      adapterBuscador.notifyDataSetChanged();
+                   }
 
-                } else {
+                   buscadordeNombre.close();
 
-                    ConexionSQLiteHelper conn2 = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
-                    SQLiteDatabase db3 = conn2.getWritableDatabase();
+               } else {
 
-                    nombreListas.clear();
-                    nombreListasencontradas.clear();
-                    Cursor consultaNombre = db3.rawQuery("select * from nombreLista", null);
+                   ConexionSQLiteHelper conn2 = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
+                   SQLiteDatabase db3 = conn2.getWritableDatabase();
 
-                    if (consultaNombre.moveToFirst()){
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);
-                        listadoDeListasCreadas.setAdapter(adapter);
-                        do{
-                            idsListas.add(consultaNombre.getInt(0));
-                            nombreListas.add(consultaNombre.getString(1));
-                        }while (consultaNombre.moveToNext());
-                    }
+                   idsListas.clear();
+                   nombreListas.clear();
+                   nombreListasencontradas.clear();
+                   Cursor consultaNombre = db3.rawQuery("select * from nombreLista", null);
 
-                    consultaNombre.close();
-                }
+                   if (consultaNombre.moveToFirst()) {
+                       ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, nombreListas);
+                       listadoDeListasCreadas.setAdapter(adapter);
+                       do {
+                           idsListas.add(consultaNombre.getInt(0));
+                           nombreListas.add(consultaNombre.getString(1));
+                       } while (consultaNombre.moveToNext());
+                   }
+
+                   consultaNombre.close();
+               }
 
                     conn.close();
+                
             }
         });
 
@@ -127,6 +137,7 @@ public class BuscarListas extends AppCompatActivity {
 
                     Intent i = new Intent(getApplicationContext(),ActivityLista.class);
                     i.putExtra("idLista",idLista);
+                    finish();
                     startActivity(i);
                 }
             });

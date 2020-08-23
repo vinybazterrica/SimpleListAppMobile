@@ -33,11 +33,13 @@
 
         <Button
             android:id="@+id/btn_crearLista"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/ED_Pido_Nombre_Lista"
             android:layout_centerInParent="true"
             android:layout_marginTop="15dp"
-            android:text="@string/btn_CrearLista" />
+            android:text="@string/btn_CrearLista"
+            android:background="@drawable/boton_custom"
+            android:textColor="#FFF"/>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
