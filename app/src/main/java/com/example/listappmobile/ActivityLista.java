@@ -1,12 +1,16 @@
 package com.example.listappmobile;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -33,7 +37,8 @@ public class ActivityLista extends AppCompatActivity {
     private Button btnEliminar;
 
     List<String> objetosLista = new ArrayList<>();
-    ArrayList<String> convertido = new ArrayList<>();
+    List<Integer> idsObjetos = new ArrayList<>();
+    ArrayAdapter<String> adapterLista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +53,7 @@ public class ActivityLista extends AppCompatActivity {
         lista_Objetos_Lista = findViewById(R.id.listadoDeObjetos);
         btnEliminar = findViewById(R.id.btnEliminar);
 
-        ArrayAdapter<String> adapterLista= new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosLista); //Antes iba objetosLista
+        adapterLista = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosLista); //Antes iba objetosLista
         lista_Objetos_Lista.setAdapter(adapterLista);
 
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
@@ -65,12 +70,14 @@ public class ActivityLista extends AppCompatActivity {
 
         buscoNombre.close();
 
-        Cursor fila = db.rawQuery("SELECT objeto FROM objetosLista WHERE id_lista = "+idLista, null);
+        Cursor fila = db.rawQuery("SELECT id,objeto FROM objetosLista WHERE id_lista = "+idLista, null);
 
 
         if (fila != null && fila.moveToFirst()) {
             do{
-               String  NombreLista = fila.getString(0);
+                int idObjeto = fila.getInt(0);
+               String  NombreLista = fila.getString(1);
+                idsObjetos.add(idObjeto);
                objetosLista.add(NombreLista);
             }while (fila.moveToNext());
         }
@@ -78,10 +85,48 @@ public class ActivityLista extends AppCompatActivity {
 
         fila.close();
 
+        lista_Objetos_Lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder alerta = new AlertDialog.Builder(ActivityLista.this);
+                alerta.setMessage("¿Desea eliminar el item seleccionado?")
+                        .setCancelable(true)
+                        .setPositiveButton(Html.fromHtml("Si"), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
+                                SQLiteDatabase db = conn.getWritableDatabase();
+
+                                int id_Objeto = idsObjetos.get(position);
+
+                                db.execSQL("DELETE from objetosLista where id ="+id_Objeto);
+
+                                objetosLista.remove(position);
+                                adapterLista.notifyDataSetChanged();
+
+                                db.close();
+
+                                Toast.makeText(getApplicationContext(),"Id borrado : "+id_Objeto, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog titulo = alerta.create();
+                titulo.setTitle("¿Eliminar Item?");
+                titulo.show();
+            }
+        });
+
         db.close();
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                
                 ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), "bd_listas", null, 4);
                 SQLiteDatabase db = conn.getWritableDatabase();
                 int idLista_Eliminar = (int) idLista;

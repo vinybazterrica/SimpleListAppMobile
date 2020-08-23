@@ -19,13 +19,13 @@ class ConexionSQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
             db.execSQL("create table nombreLista(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre text)");
 
-            db.execSQL("create table objetosLista(id integer primary key not null, id_lista integer, objeto text, foreign key(id_lista) references nombreLista(id))");
+            db.execSQL("create table objetosLista(id integer primary key AUTOINCREMENT not null, id_lista integer, objeto text, foreign key(id_lista) references nombreLista(id))");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS lista");
-            db.execSQL("DROP TABLE IF EXISTS objetos");
+            db.execSQL("DROP TABLE IF EXISTS nombreLista");
+            db.execSQL("DROP TABLE IF EXISTS objetosLista");
             onCreate(db);
     }
 }

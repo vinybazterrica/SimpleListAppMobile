@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -80,6 +82,30 @@ public class ActivityCreaLista extends AppCompatActivity {
         }
         busca_Nombre_En_BD.close();
 
+        listaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder alerta = new AlertDialog.Builder(ActivityCreaLista.this);
+                alerta.setMessage("¿Desea eliminar el item seleccionado?")
+                                    .setCancelable(true)
+                                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            productos.remove(position);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                AlertDialog titulo = alerta.create();
+                titulo.setTitle("¿Eliminar Item?");
+                titulo.show();
+            }
+        });
 
 
         //Funcion que escucha si se pulsa el boton de agregar objeto a la lista
