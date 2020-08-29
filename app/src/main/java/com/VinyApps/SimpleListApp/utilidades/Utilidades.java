@@ -1,6 +1,4 @@
-package com.example.listappmobile.utilidades;
-
-import java.util.ArrayList;
+package com.VinyApps.SimpleListApp.utilidades;
 
 public class Utilidades {
 

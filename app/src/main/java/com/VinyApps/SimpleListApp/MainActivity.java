@@ -1,4 +1,4 @@
-package com.example.listappmobile;
+package com.VinyApps.SimpleListApp;
 
 import androidx.appcompat.app.AppCompatActivity;
 

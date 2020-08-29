@@ -1,12 +1,10 @@
-package com.example.listappmobile;
+package com.VinyApps.SimpleListApp;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
-
-import com.example.listappmobile.utilidades.Utilidades;
 
 class ConexionSQLiteHelper extends SQLiteOpenHelper {
 

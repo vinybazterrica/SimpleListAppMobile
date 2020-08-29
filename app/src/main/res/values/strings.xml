@@ -1,12 +1,12 @@
 <resources>
     //Nombre APP
-    <string name="app_name">List</string>
+    <string name="app_name">Simple List</string>
 
     //imagen descripcion
     <string name="logoApp">logoApp</string>
 
     //Textos
-    <string name="txt_app">List</string>
+    <string name="txt_app">Simple List</string>
     <string name="txt_pido_nombre_lista">Ingrese nombre de la Lista</string>
     <string name="chackBox_completado">Completado</string>
     <string name="txt_producto">Producto</string>

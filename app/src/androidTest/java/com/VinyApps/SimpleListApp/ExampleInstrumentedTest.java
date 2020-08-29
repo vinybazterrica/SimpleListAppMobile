@@ -1,4 +1,4 @@
-package com.example.listappmobile;
+package com.VinyApps.SimpleListApp;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.example.listappmobile.entidades;
+package com.VinyApps.SimpleListApp.entidades;
 
 public class Lista {
     String objeto;
