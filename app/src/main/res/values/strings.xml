@@ -20,9 +20,10 @@
     <string name="btn_CrearLista">Crear Lista</string>
     <string name="btn_GuardarLista">Guardar Lista</string>
     <string name="btn_EliminarLista">Eliminar Lista</string>
+    <string name="btn_ActualizarLista">Actualizar Lista</string>
 
 
     //version APP
     <string name="txt_versionApp">Version de la aplicacion</string>
-    <string name="version_app">4.15</string>
+    <string name="version_app">5.16</string>
 </resources>

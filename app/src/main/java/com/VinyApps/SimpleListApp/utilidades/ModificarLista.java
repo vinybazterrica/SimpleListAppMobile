@@ -3,6 +3,7 @@ package com.VinyApps.SimpleListApp.utilidades;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,11 +32,11 @@ public class ModificarLista extends AppCompatActivity {
 
     private EditText nombre_lista, tx_nombreProducto;
     private ListView lista_Objetos_Lista;
-    private Button btnEliminar, btn_Agregar;
+    private Button btnEliminar, btn_Agregar, btn_Actualizar;
 
-    List<String> objetosLista = new ArrayList<>();
-    List<Integer> idsObjetos = new ArrayList<>();
-    ArrayAdapter<String> adapterLista;
+    List<String> objetosListaModificar = new ArrayList<>();
+    List<Integer> idsObjetosModificar = new ArrayList<>();
+    ArrayAdapter<String> adapterListaModificar;
 
     //Constantes de SQLite:
     String nombre_bdd = "bd_listas";
@@ -44,6 +45,7 @@ public class ModificarLista extends AppCompatActivity {
     String bdd_Elimina_objetosLista_por_id = "DELETE from objetosLista where id =";
     String bdd_Elimina_nombreLista_por_id = "DELETE from nombreLista where id =";
     String bdd_Elimina_objetosLista_por_idLista = "DELETE FROM objetosLista where id_lista =";
+    String bdd_actualizar_nombre_Lista = "UPDATE nombreLista set nombre = ";
 
     //Constantes normales:
     String mensaje_elimina_item = "¿Desea eliminar el item seleccionado?";
@@ -57,17 +59,17 @@ public class ModificarLista extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true); //Agrego el icono al ActionBar
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);   //Seteo el icono que quiero en el ActionBar
 
-        final long idLista = getIntent().getLongExtra("idLista",2);
+        final long idLista = getIntent().getLongExtra("idLista",-1);
 
         nombre_lista = findViewById(R.id.et_NombreListaModificar);
-        lista_Objetos_Lista = findViewById(R.id.listadoDeObjetos);
-        btnEliminar = findViewById(R.id.btnEliminar);
+        lista_Objetos_Lista = findViewById(R.id.listaViewModificar);
+        btnEliminar = findViewById(R.id.btn_EliminarModifica);
         btn_Agregar = findViewById(R.id.btn_agregarModificar);
         tx_nombreProducto = findViewById(R.id.tx_nombreProductoModificar);
+        btn_Actualizar = findViewById(R.id.btn_guardar);
 
-
-        adapterLista = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosLista); //Antes iba objetosLista
-        lista_Objetos_Lista.setAdapter(adapterLista);
+        adapterListaModificar = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosListaModificar); //Antes iba objetosLista
+        lista_Objetos_Lista.setAdapter(adapterListaModificar);
 
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);
         SQLiteDatabase db = conn.getWritableDatabase();
@@ -90,8 +92,8 @@ public class ModificarLista extends AppCompatActivity {
             do{
                 int idObjeto = fila.getInt(0);
                 String  NombreLista = fila.getString(1);
-                idsObjetos.add(idObjeto);
-                objetosLista.add(NombreLista);
+                idsObjetosModificar.add(idObjeto);
+                objetosListaModificar.add(NombreLista);
             }while (fila.moveToNext());
         }
 
@@ -111,12 +113,12 @@ public class ModificarLista extends AppCompatActivity {
                                 ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);
                                 SQLiteDatabase db = conn.getWritableDatabase();
 
-                                int id_Objeto = idsObjetos.get(position);
+                                int id_Objeto = idsObjetosModificar.get(position);
 
                                 db.execSQL(bdd_Elimina_objetosLista_por_id+id_Objeto);
 
-                                objetosLista.remove(position);
-                                adapterLista.notifyDataSetChanged();
+                                objetosListaModificar.remove(position);
+                                adapterListaModificar.notifyDataSetChanged();
 
                                 db.close();
 
@@ -160,8 +162,8 @@ public class ModificarLista extends AppCompatActivity {
 
                 //Valido que el campo Tx_nombreProducto no este vacio, si esta vacio muestra un TOAST diciendo que ingrese dato
                 if(!tx_nombreProducto.getText().toString().isEmpty()) {
-                    objetosLista.add(tx_nombreProducto.getText().toString());
-                    adapterLista.notifyDataSetChanged();
+                    objetosListaModificar.add(tx_nombreProducto.getText().toString());
+                    adapterListaModificar.notifyDataSetChanged();
                     tx_nombreProducto.setText(null);
                     tx_nombreProducto.setHint(R.string.txt_AgregarProductoNombre);
                 } else if (tx_nombreProducto.getText().toString().isEmpty()) {
@@ -169,6 +171,35 @@ public class ModificarLista extends AppCompatActivity {
                 }
             }
 
+        });
+
+
+        btn_Actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
+                SQLiteDatabase db = conn.getWritableDatabase();
+                int idLista_Eliminar = (int) idLista;
+
+                db.execSQL(bdd_Elimina_objetosLista_por_idLista+idLista_Eliminar);
+
+                ContentValues valores = new ContentValues();
+                ContentValues valorTitulo = new ContentValues();
+                valorTitulo.put("nombre", String.valueOf(nombre_lista));
+
+                for (int i = 0 ; i < objetosListaModificar.size(); i++){
+                    valores.put("id_lista",idLista);
+                    valores.put("objeto",objetosListaModificar.get(i));
+                    long insert = db.insert("objetosLista", null, valores);
+                }
+
+                db.execSQL(bdd_actualizar_nombre_Lista+nombre_lista.getText().toString()+" WHERE id = "+idLista);
+
+                Intent i = new Intent(getApplicationContext(), BuscarListas.class);
+                startActivity(i);
+                db.close();
+                finish();
+            }
         });
 
     }

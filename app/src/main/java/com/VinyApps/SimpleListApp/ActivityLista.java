@@ -57,7 +57,6 @@ public class ActivityLista extends AppCompatActivity {
 
 
         final long idLista = getIntent().getLongExtra("idLista",-1);
-        final int idListaObtenido = (int) idLista;
 
         nombre_lista = findViewById(R.id.nombreLista);
         lista_Objetos_Lista = findViewById(R.id.listadoDeObjetos);
@@ -174,7 +173,7 @@ public class ActivityLista extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent enviarAModificar = new Intent(getApplicationContext(), ModificarLista.class);
-                enviarAModificar.putExtra("idLista",idListaObtenido);
+                enviarAModificar.putExtra("idLista",idLista);
                 startActivity(enviarAModificar);
             }
         });

@@ -14,7 +14,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".utilidades.ModificarLista"
-            android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             tools:ignore="LockedOrientationActivity" />
