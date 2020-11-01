@@ -1,9 +1,8 @@
-package com.VinyApps.SimpleListApp;
+package com.VinyApps.SimpleListApp.utilidades;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,20 +13,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.VinyApps.SimpleListApp.utilidades.ModificarLista;
+import com.VinyApps.SimpleListApp.ActivityCreaLista;
+import com.VinyApps.SimpleListApp.ActivityLista;
+import com.VinyApps.SimpleListApp.BuscarListas;
+import com.VinyApps.SimpleListApp.ConexionSQLiteHelper;
+import com.VinyApps.SimpleListApp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityLista extends AppCompatActivity {
+public class ModificarLista extends AppCompatActivity {
 
-    private TextView nombre_lista;
+    private EditText nombre_lista, tx_nombreProducto;
     private ListView lista_Objetos_Lista;
-    private Button btnEliminar, btnModificar;
+    private Button btnEliminar, btn_Agregar;
 
     List<String> objetosLista = new ArrayList<>();
     List<Integer> idsObjetos = new ArrayList<>();
@@ -43,26 +47,24 @@ public class ActivityLista extends AppCompatActivity {
 
     //Constantes normales:
     String mensaje_elimina_item = "¿Desea eliminar el item seleccionado?";
-    String mensaje_Elimina_Lista = "¿Desea Eliminar la Lista?";
     String id_borrado = "Id borrado : ";
     String consulta_Eliminar_item = "¿Eliminar Item?";
-    String consulta_Eliminar_Lista = "¿Eliminar Lista?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista);
+        setContentView(R.layout.activity_modificar_lista);
         getSupportActionBar().setDisplayShowHomeEnabled(true); //Agrego el icono al ActionBar
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);   //Seteo el icono que quiero en el ActionBar
 
+        final long idLista = getIntent().getLongExtra("idLista",2);
 
-        final long idLista = getIntent().getLongExtra("idLista",-1);
-        final int idListaObtenido = (int) idLista;
-
-        nombre_lista = findViewById(R.id.nombreLista);
+        nombre_lista = findViewById(R.id.et_NombreListaModificar);
         lista_Objetos_Lista = findViewById(R.id.listadoDeObjetos);
         btnEliminar = findViewById(R.id.btnEliminar);
-        btnModificar = findViewById(R.id.btn_modificar_lista);
+        btn_Agregar = findViewById(R.id.btn_agregarModificar);
+        tx_nombreProducto = findViewById(R.id.tx_nombreProductoModificar);
+
 
         adapterLista = new ArrayAdapter<>(getApplicationContext(), R.layout.items_lista, objetosLista); //Antes iba objetosLista
         lista_Objetos_Lista.setAdapter(adapterLista);
@@ -87,9 +89,9 @@ public class ActivityLista extends AppCompatActivity {
         if (fila != null && fila.moveToFirst()) {
             do{
                 int idObjeto = fila.getInt(0);
-               String  NombreLista = fila.getString(1);
+                String  NombreLista = fila.getString(1);
                 idsObjetos.add(idObjeto);
-               objetosLista.add(NombreLista);
+                objetosLista.add(NombreLista);
             }while (fila.moveToNext());
         }
 
@@ -99,7 +101,7 @@ public class ActivityLista extends AppCompatActivity {
         lista_Objetos_Lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder alerta = new AlertDialog.Builder(ActivityLista.this);
+                AlertDialog.Builder alerta = new AlertDialog.Builder(ModificarLista.this);
                 alerta.setMessage(mensaje_elimina_item)
                         .setCancelable(true)
                         .setPositiveButton(Html.fromHtml("Si"), new DialogInterface.OnClickListener() {
@@ -138,45 +140,35 @@ public class ActivityLista extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder preguntaEliminar = new AlertDialog.Builder(ActivityLista.this);
+                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
+                SQLiteDatabase db = conn.getWritableDatabase();
+                int idLista_Eliminar = (int) idLista;
 
-                preguntaEliminar.setMessage(mensaje_Elimina_Lista)
-                        .setCancelable(true)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
-                                SQLiteDatabase db = conn.getWritableDatabase();
-                                int idLista_Eliminar = (int) idLista;
+                db.execSQL(bdd_Elimina_nombreLista_por_id+idLista_Eliminar);
+                db.execSQL(bdd_Elimina_objetosLista_por_idLista+idLista_Eliminar);
 
-                                db.execSQL(bdd_Elimina_nombreLista_por_id+idLista_Eliminar);
-                                db.execSQL(bdd_Elimina_objetosLista_por_idLista+idLista_Eliminar);
-
-                                Intent i = new Intent(getApplicationContext(), BuscarListas.class);
-                                startActivity(i);
-                                db.close();
-                                finish();
-                            }
-                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog titulo = preguntaEliminar.create();
-                preguntaEliminar.setTitle(consulta_Eliminar_Lista);
-                titulo.show();
+                Intent i = new Intent(getApplicationContext(), BuscarListas.class);
+                startActivity(i);
+                db.close();
+                finish();
             }
         });
 
-        btnModificar.setOnClickListener(new View.OnClickListener() {
+        btn_Agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent enviarAModificar = new Intent(getApplicationContext(), ModificarLista.class);
-                enviarAModificar.putExtra("idLista",idListaObtenido);
-                startActivity(enviarAModificar);
+
+                //Valido que el campo Tx_nombreProducto no este vacio, si esta vacio muestra un TOAST diciendo que ingrese dato
+                if(!tx_nombreProducto.getText().toString().isEmpty()) {
+                    objetosLista.add(tx_nombreProducto.getText().toString());
+                    adapterLista.notifyDataSetChanged();
+                    tx_nombreProducto.setText(null);
+                    tx_nombreProducto.setHint(R.string.txt_AgregarProductoNombre);
+                } else if (tx_nombreProducto.getText().toString().isEmpty()) {
+                    Toast.makeText(ModificarLista.this, "Ingrese nombre", Toast.LENGTH_SHORT).show();
+                }
             }
+
         });
 
     }

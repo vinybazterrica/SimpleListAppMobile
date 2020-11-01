@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-class ConexionSQLiteHelper extends SQLiteOpenHelper {
+public class ConexionSQLiteHelper extends SQLiteOpenHelper {
 
 
     public ConexionSQLiteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
