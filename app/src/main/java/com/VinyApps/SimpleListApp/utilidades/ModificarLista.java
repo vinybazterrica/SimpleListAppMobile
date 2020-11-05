@@ -193,8 +193,7 @@ public class ModificarLista extends AppCompatActivity {
                     long insert = db.insert("objetosLista", null, valores);
                 }
 
-//                db.execSQL(bdd_actualizar_nombre_Lista+nombre_lista.getText().toString()+" WHERE id = "+idLista);
-                    db.execSQL("UPDATE nombreLista set nombre = "+nombre_lista.getText().toString()+" WHERE id = "+idLista);
+                    db.execSQL("UPDATE nombreLista set nombre = '"+nombre_lista.getText().toString()+"'"+" WHERE id = "+idLista);
 
                 Intent i = new Intent(getApplicationContext(), BuscarListas.class);
                 startActivity(i);
