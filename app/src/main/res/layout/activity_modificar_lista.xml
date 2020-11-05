@@ -26,7 +26,8 @@
             android:textColorHint="@color/colorAccent"
             android:textSize="20sp"
             android:textStyle="normal"
-            android:autofillHints="" />
+            android:autofillHints=""
+            android:screenReaderFocusable="false"/>
 
         <EditText
             android:id="@+id/tx_nombreProductoModificar"

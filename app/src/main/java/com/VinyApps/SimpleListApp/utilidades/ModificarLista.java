@@ -45,12 +45,12 @@ public class ModificarLista extends AppCompatActivity {
     String bdd_Elimina_objetosLista_por_id = "DELETE from objetosLista where id =";
     String bdd_Elimina_nombreLista_por_id = "DELETE from nombreLista where id =";
     String bdd_Elimina_objetosLista_por_idLista = "DELETE FROM objetosLista where id_lista =";
-    String bdd_actualizar_nombre_Lista = "UPDATE nombreLista set nombre = ";
 
     //Constantes normales:
     String mensaje_elimina_item = "¿Desea eliminar el item seleccionado?";
     String id_borrado = "Id borrado : ";
     String consulta_Eliminar_item = "¿Eliminar Item?";
+    String mensaje_ingresar_nombre = "Debe ingresar nombre de lista";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,6 @@ public class ModificarLista extends AppCompatActivity {
 
         Cursor fila = db.rawQuery(bdd_Busca_id_objeto_en_objetosLista_por_id+idLista, null);
 
-
         if (fila != null && fila.moveToFirst()) {
             do{
                 int idObjeto = fila.getInt(0);
@@ -96,7 +95,6 @@ public class ModificarLista extends AppCompatActivity {
                 objetosListaModificar.add(NombreLista);
             }while (fila.moveToNext());
         }
-
 
         fila.close();
 
@@ -173,34 +171,37 @@ public class ModificarLista extends AppCompatActivity {
 
         });
 
-
         btn_Actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
-                SQLiteDatabase db = conn.getWritableDatabase();
-                int idLista_Eliminar = (int) idLista;
+                String nombreDeLista = nombre_lista.getText().toString();
+                if (!nombreDeLista.isEmpty()) {
+                    ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
+                    SQLiteDatabase db = conn.getWritableDatabase();
+                    int idLista_Eliminar = (int) idLista;
 
-                db.execSQL(bdd_Elimina_objetosLista_por_idLista+idLista_Eliminar);
+                    db.execSQL(bdd_Elimina_objetosLista_por_idLista + idLista_Eliminar);
 
-                ContentValues valores = new ContentValues();
-                ContentValues valorTitulo = new ContentValues();
-                valorTitulo.put("nombre", String.valueOf(nombre_lista));
+                    ContentValues valores = new ContentValues();
+                    ContentValues valorTitulo = new ContentValues();
+                    valorTitulo.put("nombre", String.valueOf(nombre_lista));
 
-                for (int i = 0 ; i < objetosListaModificar.size(); i++){
-                    valores.put("id_lista",idLista);
-                    valores.put("objeto",objetosListaModificar.get(i));
-                    long insert = db.insert("objetosLista", null, valores);
+                    for (int i = 0; i < objetosListaModificar.size(); i++) {
+                        valores.put("id_lista", idLista);
+                        valores.put("objeto", objetosListaModificar.get(i));
+                        long insert = db.insert("objetosLista", null, valores);
+                    }
+
+                    db.execSQL("UPDATE nombreLista set nombre = '" + nombreDeLista + "'" + " WHERE id = " + idLista);
+
+                    Intent i = new Intent(getApplicationContext(), BuscarListas.class);
+                    startActivity(i);
+                    db.close();
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(),mensaje_ingresar_nombre,Toast.LENGTH_LONG).show();
                 }
-
-                    db.execSQL("UPDATE nombreLista set nombre = '"+nombre_lista.getText().toString()+"'"+" WHERE id = "+idLista);
-
-                Intent i = new Intent(getApplicationContext(), BuscarListas.class);
-                startActivity(i);
-                db.close();
-                finish();
             }
         });
-
     }
 }
