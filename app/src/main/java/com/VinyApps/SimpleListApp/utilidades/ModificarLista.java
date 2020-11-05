@@ -51,6 +51,7 @@ public class ModificarLista extends AppCompatActivity {
     String id_borrado = "Id borrado : ";
     String consulta_Eliminar_item = "¿Eliminar Item?";
     String mensaje_ingresar_nombre = "Debe ingresar nombre de lista";
+    String mensaje_Elimina_Lista = "¿Desea Eliminar la Lista?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,25 +135,44 @@ public class ModificarLista extends AppCompatActivity {
                 titulo.show();
             }
         });
-
         db.close();
+
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
-                SQLiteDatabase db = conn.getWritableDatabase();
-                int idLista_Eliminar = (int) idLista;
+                AlertDialog.Builder AlertaEliminarLista = new AlertDialog.Builder(ModificarLista.this);
+                AlertaEliminarLista.setCancelable(true)
+                        .setPositiveButton("si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                db.execSQL(bdd_Elimina_nombreLista_por_id+idLista_Eliminar);
-                db.execSQL(bdd_Elimina_objetosLista_por_idLista+idLista_Eliminar);
+                                ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);//
+                                SQLiteDatabase db = conn.getWritableDatabase();
+                                int idLista_Eliminar = (int) idLista;
 
-                Intent i = new Intent(getApplicationContext(), BuscarListas.class);
-                startActivity(i);
-                db.close();
-                finish();
+                                db.execSQL(bdd_Elimina_nombreLista_por_id+idLista_Eliminar);
+                                db.execSQL(bdd_Elimina_objetosLista_por_idLista+idLista_Eliminar);
+
+                                Intent i = new Intent(getApplicationContext(), BuscarListas.class);
+                                startActivity(i);
+                                db.close();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog tituloELiminarLista = AlertaEliminarLista.create();
+                tituloELiminarLista.setTitle(mensaje_Elimina_Lista);
+                tituloELiminarLista.show();
             }
         });
+
+
 
         btn_Agregar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -25,5 +25,5 @@
 
     //version APP
     <string name="txt_versionApp">Version de la aplicacion</string>
-    <string name="version_app">6.16</string>
+    <string name="version_app">6.17</string>
 </resources>

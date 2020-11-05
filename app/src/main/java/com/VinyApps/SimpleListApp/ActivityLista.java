@@ -136,9 +136,7 @@ public class ActivityLista extends AppCompatActivity {
         btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AlertDialog.Builder preguntaEliminar = new AlertDialog.Builder(ActivityLista.this);
-
                 preguntaEliminar.setMessage(mensaje_Elimina_Lista)
                         .setCancelable(true)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
