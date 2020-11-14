@@ -140,7 +140,7 @@ public class ActivityCreaLista extends AppCompatActivity {
                 finish();
 
         } else {
-            Toast.makeText(this,"Debe ingresar nombre de Lista", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Debe ingresar minimo 1 producto", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -12,6 +12,7 @@
     <string name="txt_producto">Producto</string>
     <string name="txt_AgregarProductoNombre">Ingrese Nombre</string>
     <string name="nombreLista">Nombre Lista</string>
+    <string name="txt_Items_Completados">Items Completados:</string>
 
     //Botones
     <string name="btn_NuevaList">Nueva Lista</string>
@@ -25,5 +26,5 @@
 
     //version APP
     <string name="txt_versionApp">Version de la aplicacion</string>
-    <string name="version_app">6.17</string>
+    <string name="version_app">7.17</string>
 </resources>

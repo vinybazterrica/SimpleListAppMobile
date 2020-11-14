@@ -39,7 +39,7 @@
             android:background="@drawable/boton_custom"
             android:onClick="CrearLista"
             android:text="@string/btn_NuevaList"
-            android:textColor="#FFFF"/>
+            android:textColor="#FFFF" />
 
         <Button
             android:id="@+id/btn_buscar"

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="15dp"
     tools:context=".ActivityLista">
 
     <RelativeLayout
@@ -11,6 +12,28 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/BarraProgreso"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nombreLista"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:indeterminate="false"
+            android:progress="0"
+            android:progressDrawable="@drawable/barra_de_progreso"/>
+
+        <TextView
+            android:id="@+id/contador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/BarraProgreso"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/BarraProgreso"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/btn_modificar_lista"
@@ -27,13 +50,14 @@
             android:id="@+id/btnEliminar"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/listadoDeObjetos"
+            android:layout_below="@id/ListaItemsCompletados"
+            android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:layout_marginTop="20dp"
-            android:textSize="15sp"
-            android:text="@string/btn_EliminarLista"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/boton_custom"
-            android:textColor="#FFF"/>
+            android:text="@string/btn_EliminarLista"
+            android:textColor="#FFF"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/nombreLista"
@@ -41,19 +65,37 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:textSize="20sp"
+            android:text="@string/nombreLista"
             android:textColor="#000000"
-            android:text="@string/nombreLista" />
+            android:textSize="20sp" />
 
         <ListView
             android:id="@+id/listadoDeObjetos"
             android:layout_width="match_parent"
             android:layout_height="271dp"
-            android:layout_below="@id/nombreLista"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="20dp" >
+            android:layout_below="@id/BarraProgreso"
+            android:layout_centerInParent="true">
 
         </ListView>
+
+        <TextView
+            android:id="@+id/Items_Completados"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/listadoDeObjetos"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:text="@string/txt_Items_Completados"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/ListaItemsCompletados"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_below="@id/Items_Completados"
+            android:layout_marginBottom="5dp" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
