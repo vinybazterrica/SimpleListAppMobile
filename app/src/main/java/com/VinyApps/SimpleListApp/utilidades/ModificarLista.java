@@ -209,6 +209,7 @@ public class ModificarLista extends AppCompatActivity {
                     for (int i = 0; i < objetosListaModificar.size(); i++) {
                         valores.put("id_lista", idLista);
                         valores.put("objeto", objetosListaModificar.get(i));
+                        valores.put("estadoObjeto",0);
                         long insert = db.insert("objetosLista", null, valores);
                     }
 

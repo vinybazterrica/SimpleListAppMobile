@@ -34,7 +34,7 @@
         <ListView
             android:id="@+id/listadoDeListasCreadas"
             android:layout_width="match_parent"
-            android:layout_height="211dp"
+            android:layout_height="411dp"
             android:layout_below="@id/buscadorDeListas"
             android:layout_marginStart="10sp"
             android:layout_marginTop="10sp"

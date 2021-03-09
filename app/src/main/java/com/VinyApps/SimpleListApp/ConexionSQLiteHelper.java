@@ -17,7 +17,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
             db.execSQL("create table nombreLista(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre text)");
 
-            db.execSQL("create table objetosLista(id integer primary key AUTOINCREMENT not null, id_lista integer, objeto text, foreign key(id_lista) references nombreLista(id))");
+            db.execSQL("create table objetosLista(id integer primary key AUTOINCREMENT not null, id_lista integer, objeto text,estadoObjeto integer, foreign key(id_lista) references nombreLista(id))");
     }
 
     @Override

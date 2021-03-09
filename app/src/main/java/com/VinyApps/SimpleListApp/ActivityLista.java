@@ -3,7 +3,6 @@ package com.VinyApps.SimpleListApp;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,13 +14,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.VinyApps.SimpleListApp.utilidades.Adaptador;
 import com.VinyApps.SimpleListApp.utilidades.ModificarLista;
 
 import java.util.ArrayList;
@@ -58,6 +55,7 @@ public class ActivityLista extends AppCompatActivity {
     String consulta_Eliminar_Lista = "¿Eliminar Lista?";
     String consulta_volver_Pendiente = "¿Desea marcar como 'No Completado'?";
     String volver_Pendiente = "Eliminara el item del listado de Completados";
+    String ya_Existente_En_Completados = "Objeto seleccionado ya completado.";
 
     //Variables:
     int progreso = 0;
@@ -110,8 +108,25 @@ public class ActivityLista extends AppCompatActivity {
             } while (fila.moveToNext());
         }
 
-        contadorProgreso.setText(progreso + "/" + objetosLista.size());
+        Cursor filaCompletado = db.rawQuery(bdd_Busca_id_objeto_en_objetosLista_por_id + idLista + " AND estadoObjeto = 1", null);
+
+        if (filaCompletado != null && filaCompletado.moveToFirst()) {
+            do {
+                int idObjeto = filaCompletado.getInt(0);
+                String NombreLista = filaCompletado.getString(1);
+                idsObjetos.add(idObjeto);
+                objetosCompletados.add(NombreLista);
+                progreso++;
+            } while (filaCompletado.moveToNext());
+        }
+
+        String ContadorTotal = progreso + "/" + objetosLista.size();
+        contadorProgreso.setText(ContadorTotal);
+        progresoItems.setMax(objetosLista.size());
+        progresoItems.setProgress(progreso);
+
         fila.close();
+        filaCompletado.close();
 
         lista_Objetos_Lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -132,62 +147,88 @@ public class ActivityLista extends AppCompatActivity {
 
                                 objetosLista.remove(position);
                                 adapterLista.notifyDataSetChanged();
+                                if(progreso != 0){
+                                    progreso = progreso - 1;
+                                }
+
+                                progresoItems.setProgress(progreso);
+                                contadorProgreso.setText(progreso + "/" + objetosLista.size());
 
                                 db.close();
 
                                 Toast.makeText(getApplicationContext(), id_borrado + id_Objeto, Toast.LENGTH_SHORT).show();
                             }
                         })
-                        .setNegativeButton("Completado", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                progreso++;
+                        .setNegativeButton("Completado", new DialogInterface.OnClickListener() { //Envia a la lista "Completados" al item seleccionado
+                                @Override
+                                public void onClick (DialogInterface dialog,int which){
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        while (progreso < objetosLista.size()){
-                                            handler.post(new Runnable() {
+                                     final int id_Objeto = idsObjetos.get(position);
+                                     final int  estadoObjeto = BuscoEstado(id_Objeto);
+                                        if (estadoObjeto == 0) {
+                                            if (progreso < objetosLista.size()) {
+                                                progreso++;
+                                                handler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        progresoItems.setMax(objetosLista.size());
+                                                        progresoItems.setProgress(progreso);
+                                                        contadorProgreso.setText(progreso + "/" + objetosLista.size());
+                                                        if (progreso == objetosLista.size()) {
+                                                            progresoItems.setProgress(progreso);
+                                                            Toast.makeText(getApplicationContext(), "Lista Completa!", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                 CambiaEstado(id_Objeto,estadoObjeto);
+                                                    }
+                                                });
+                                                try {
+                                                    Thread.sleep(10);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }else{
+
+                                           ActivityLista.this.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    progresoItems.setMax(objetosLista.size());
-                                                    progresoItems.setProgress(progreso);
-                                                    contadorProgreso.setText(progreso + "/" + objetosLista.size());
+                                                    Toast.makeText(getApplicationContext(),ya_Existente_En_Completados,Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-                                            try {
-                                                Thread.sleep(100);
-                                            } catch (InterruptedException e){
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                        if (progreso == objetosLista.size()){
-                                            Toast.makeText(getApplicationContext(),"Lista Completa!", Toast.LENGTH_SHORT).show();
+
                                         }
                                     }
                                 }).start();
                                 objetosCompletados.add(objetosLista.get(position));
                             }
-                        });
+                      });
                 AlertDialog titulo = alerta.create();
                 titulo.setTitle(consulta_Eliminar_item);
                 titulo.show();
             }
         });
 
-        lista_objetos_completados.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lista_objetos_completados.setOnItemClickListener(new AdapterView.OnItemClickListener() { //Consulta si vuelve un item a la lista pendientes
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                     final AlertDialog.Builder pendiente = new AlertDialog.Builder(ActivityLista.this);
                     pendiente.setMessage(volver_Pendiente)
                             .setCancelable(true)
-                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {    //Elimina el item de la lista
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    progreso--;
+                                    progresoItems.setProgress(progreso);
+                                    contadorProgreso.setText(progreso + "/" + objetosLista.size());
                                     objetosCompletados.remove(position);
-                                    progreso = progreso - 1;
+                                    final int id_Objeto = idsObjetos.get(position);
+                                    final int  estadoObjeto = BuscoEstado(id_Objeto);
+                                    CambiaEstado(id_Objeto,estadoObjeto);
+
                                 }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {  //Aca no hace nada
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -199,7 +240,7 @@ public class ActivityLista extends AppCompatActivity {
             }
         });
 
-        btnEliminar.setOnClickListener(new View.OnClickListener() {
+        btnEliminar.setOnClickListener(new View.OnClickListener() {     //Elimina lista
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder preguntaEliminar = new AlertDialog.Builder(ActivityLista.this);
@@ -232,7 +273,7 @@ public class ActivityLista extends AppCompatActivity {
             }
         });
 
-        btnModificar.setOnClickListener(new View.OnClickListener() {
+        btnModificar.setOnClickListener(new View.OnClickListener() {    //Envia a la modificacion de lista
             @Override
             public void onClick(View v) {
                 Intent enviarAModificar = new Intent(getApplicationContext(), ModificarLista.class);
@@ -240,5 +281,28 @@ public class ActivityLista extends AppCompatActivity {
                 startActivity(enviarAModificar);
             }
         });
+    }
+        //Buscador de Estado del objeto....
+    public int BuscoEstado (int id_elemento){
+        int EstadoDelObjeto = 0;
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT estadoObjeto FROM objetosLista WHERE id ="+id_elemento,null);
+        if (cursor.moveToFirst()){
+            do{
+                EstadoDelObjeto = cursor.getInt(0);
+            }while (cursor.moveToNext());
+        }
+            return EstadoDelObjeto;
+    }
+
+    public void CambiaEstado (int id_elemento, int EstadoAnterior){
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getApplicationContext(), nombre_bdd, null, 4);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        if (EstadoAnterior == 0) {
+            db.execSQL("UPDATE objetosLista SET estadoObjeto =" + 1 + " WHERE id=" + id_elemento);
+        } else {
+            db.execSQL("UPDATE objetosLista SET estadoObjeto =" + 0 + " WHERE id=" + id_elemento);
+        }
     }
 }

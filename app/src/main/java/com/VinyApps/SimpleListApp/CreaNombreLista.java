@@ -55,10 +55,7 @@ public class CreaNombreLista extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(),"Debe ingresar nombre de Lista", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
-
     }
 }

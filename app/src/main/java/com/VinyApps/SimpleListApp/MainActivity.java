@@ -18,10 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowHomeEnabled(true); //Agrego el icono al ActionBar
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);    //Seteo el icono que quiero en el ActionBar
-
-
-
-
     }
 
     //funcion para las opciones overflow
@@ -53,7 +49,4 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this,BuscarListas.class);
         startActivity(i);
     }
-
-
-
 }

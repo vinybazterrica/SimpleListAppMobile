@@ -134,9 +134,5 @@ public class BuscarListas extends AppCompatActivity {
                     startActivity(i);
                 }
             });
-
-
-
     }
-
 }
