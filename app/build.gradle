@@ -8,8 +8,8 @@ android {
         applicationId 'com.VinyApps.ListApp'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 5
-        versionName "7.17"
+        versionCode 6
+        versionName "8.19"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
